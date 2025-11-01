@@ -5,3 +5,5 @@
 /Logs
 /obj
 *.sln
+/WebGL Builds
+/Temp

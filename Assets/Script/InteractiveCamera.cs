@@ -25,7 +25,7 @@ public class InteractiveCamera : MonoBehaviour
     private void Awake()
     {
         targetCamera = GetComponent<Camera>();
-        
+
         if (targetCamera == null)
         {
             Debug.LogError($"InteractiveCamera on {gameObject.name} requires a Camera component.", this);
@@ -92,8 +92,8 @@ public class InteractiveCamera : MonoBehaviour
         if (isDragging && Input.GetMouseButton(0))
         {
             Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
-            
-            currentHorizontalAngle += mouseDelta.x * rotationSpeed;
+
+            currentHorizontalAngle += (mouseDelta.x * rotationSpeed);
             currentVerticalAngle -= mouseDelta.y * rotationSpeed;
             currentVerticalAngle = Mathf.Clamp(currentVerticalAngle, minVerticalAngle, maxVerticalAngle);
 
@@ -105,7 +105,7 @@ public class InteractiveCamera : MonoBehaviour
     private void HandleZoom()
     {
         float scrollDelta = Input.mouseScrollDelta.y;
-        
+
         if (Mathf.Abs(scrollDelta) > 0.01f)
         {
             float newFieldOfView = targetCamera.fieldOfView - scrollDelta * zoomSpeed;
@@ -120,8 +120,8 @@ public class InteractiveCamera : MonoBehaviour
         {
             orbitCenter = orbitTarget.position;
         }
-        
-        float horizontalRad = currentHorizontalAngle * Mathf.Deg2Rad;
+
+        float horizontalRad = (currentHorizontalAngle * Mathf.Deg2Rad);
         float verticalRad = currentVerticalAngle * Mathf.Deg2Rad;
 
         float cosVertical = Mathf.Cos(verticalRad);

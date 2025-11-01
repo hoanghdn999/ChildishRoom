@@ -12,7 +12,7 @@ public class InteractiveObject : MonoBehaviour
 
     [Header("Camera Settings")]
     public Camera MainCamera;
-    
+
     [Header("Zoom Settings")]
     [SerializeField] private float zoomSpeed = 2f;
     [SerializeField] private float zoomDistance = 1.5f;
@@ -21,7 +21,7 @@ public class InteractiveObject : MonoBehaviour
 
     private MeshRenderer meshRenderer;
     private MeshCollider meshCollider;
-    
+
     private Material[] originalMaterials;
     private Material[] highlightMaterials;
 
@@ -72,7 +72,7 @@ public class InteractiveObject : MonoBehaviour
         // Create highlight materials with yellow emission for all materials
         originalMaterials = meshRenderer.materials;
         highlightMaterials = new Material[originalMaterials.Length];
-        
+
         for (int i = 0; i < originalMaterials.Length; i++)
         {
             highlightMaterials[i] = new Material(originalMaterials[i]);
@@ -139,6 +139,7 @@ public class InteractiveObject : MonoBehaviour
     }
     IEnumerator SmoothZoomToObject()
     {
+        Debug.Log("SmoothZomo");
         isZooming = true;
 
         Vector3 startPos = MainCamera.transform.position;
@@ -146,39 +147,39 @@ public class InteractiveObject : MonoBehaviour
 
         // Calculate object's center using renderer bounds (accounts for object size and position)
         Vector3 objectCenter = meshRenderer.bounds.center;
-        
+
         // Calculate direction from object center to current camera position
         // This maintains the viewing angle relative to each object
         Vector3 dir = (MainCamera.transform.position - objectCenter).normalized;
-        
+
         // Calculate target position: position camera at zoomDistance from object center
         // Camera moves closer to object along the same viewing direction
         targetPosition = objectCenter + dir * zoomDistance;
-        
+
         // Add height offset
         targetPosition += Vector3.up * zoomHeightOffset;
-        
+
         // Calculate initial look direction from camera to object center
         Vector3 lookDirection = (objectCenter - targetPosition).normalized;
-        
+
         // Calculate camera's local axes relative to the look direction
         // Use world up as reference for right vector calculation
         Vector3 worldUp = Vector3.up;
         Vector3 cameraRight = Vector3.Cross(worldUp, lookDirection).normalized;
-        
+
         // If camera is looking straight up/down, use camera's current right vector as fallback
         if (cameraRight.magnitude < 0.1f)
         {
             cameraRight = MainCamera.transform.right;
         }
-        
+
         Vector3 cameraUp = Vector3.Cross(lookDirection, cameraRight).normalized;
-        
+
         // Apply view offset (relative to camera's right/up/forward)
         // X = right/left, Y = up/down, Z = forward/back (usually keep at 0)
         Vector3 offsetWorld = cameraRight * objectViewOffset.x + cameraUp * objectViewOffset.y + lookDirection * objectViewOffset.z;
         Vector3 targetLookAt = objectCenter + offsetWorld;
-        
+
         // Make camera look at the offset position
         targetRotation = Quaternion.LookRotation(targetLookAt - targetPosition);
 
@@ -202,6 +203,7 @@ public class InteractiveObject : MonoBehaviour
 
     IEnumerator SmoothReturnToOriginal()
     {
+        Debug.Log("SmoothReturn");
         isZooming = true;
 
         Vector3 startPos = MainCamera.transform.position;

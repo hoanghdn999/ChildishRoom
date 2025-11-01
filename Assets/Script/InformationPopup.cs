@@ -23,6 +23,7 @@ public class InformationPopup : MonoBehaviour
         imgQR.sprite = qrCode;
 
         InteractiveObject.onHitESCKey += CloseDialog;
+        btnCTA.onClick.RemoveAllListeners();
         btnCTA.onClick.AddListener(OnClickCTA);
     }
 
@@ -74,7 +75,7 @@ public class InformationPopup : MonoBehaviour
             {
                 seq.Join(this.canvasGroup.DOFade(0, TIME_SHOW));
             }
-            seq.OnComplete(this.OnCompleteHide).SetId(this.panel);
+            seq.OnComplete(this.OnCompleteHide);
         }
 
         protected virtual void OnCompleteHide()
@@ -84,6 +85,7 @@ public class InformationPopup : MonoBehaviour
 
         public void CloseDialog()
         {
+        Debug.Log("CloseDialog");
             AnimationHide();
         }
 
