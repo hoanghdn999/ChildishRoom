@@ -15,6 +15,7 @@ public class InformationPopup : MonoBehaviour
     private string url;
 
     public static System.Action onStartShowDialog;
+    public System.Action onHitESCKey;
 
     private void ParseData(string title, string description, string url, Sprite qrCode){
         txtTitle.text = title;
@@ -22,7 +23,7 @@ public class InformationPopup : MonoBehaviour
         this.url = url;
         imgQR.sprite = qrCode;
 
-        InteractiveObject.onHitESCKey += CloseDialog;
+        InteractiveCamera.onHitESCKey += CloseDialog;
         btnCTA.onClick.RemoveAllListeners();
         btnCTA.onClick.AddListener(OnClickCTA);
     }
@@ -32,7 +33,7 @@ public class InformationPopup : MonoBehaviour
         Application.OpenURL(url);
     }
 
-    public static void ShowDialog(string title, string description, string url, Sprite qrCode){
+    public static void ShowDialog(string title, string description, string url, Sprite qrCode, System.Action onHitESCKey){
         var d = FindFirstObjectByType<InformationPopup>(FindObjectsInactive.Include);
         if (d != null && !d.isActiveAndEnabled)
         {
@@ -81,6 +82,7 @@ public class InformationPopup : MonoBehaviour
         protected virtual void OnCompleteHide()
         {
             this.gameObject.SetActive(false);
+            InteractiveCamera.Instance.SmoothReturnToOriginal(2);
         }
 
         public void CloseDialog()
